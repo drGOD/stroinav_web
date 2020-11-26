@@ -15,105 +15,41 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn icon>
+      <v-btn icon @click.stop="dialogAddObject = true">
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-toolbar>
     <div class="d-flex flex-wrap align-start mb-6">
-      <v-card class="ma-3" max-width="344" outlined @click.stop="dialog = true">
+      <v-card
+        class="ma-3"
+        max-width="344"
+        outlined
+        @click.stop="openDialog(construction)"
+        v-for="construction in constructions"
+        :key="construction.id"
+      >
         <v-list-item>
           <v-list-item-avatar>
             <v-img src="https://mgsu.ru/kod/MGSUrui751.png"></v-img>
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>Реконструкция территрии</v-list-item-title>
+            <v-list-item-title>{{ construction.name }}</v-list-item-title>
             <v-list-item-subtitle></v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-list-item three-line>
           <v-list-item-content>
-            <v-list-item-subtitle
-              >Адрес: СВАО, Ярославское шоссе, вл. 26</v-list-item-subtitle
-            >
-            <v-list-item-subtitle>Застройщик: НИУ МГСУ</v-list-item-subtitle>
-            <v-list-item-subtitle>Ген.подрядчик: НИУ МГСУ</v-list-item-subtitle>
-            <v-list-item-subtitle
-              >Субъектов на объекте: 112 чел.</v-list-item-subtitle
-            >
-            <v-list-item-subtitle
-              >Иницидентов на объекте: 15 шт. (+1)</v-list-item-subtitle
-            >
-          </v-list-item-content>
-        </v-list-item>
-        <v-card-actions>
-          <v-btn outlined rounded text>
-            <v-icon>mdi-clipboard-list</v-icon> Журнал
-          </v-btn>
-          <v-btn outlined rounded text>
-            <v-icon>mdi-fountain-pen-tip</v-icon>Редактировать
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-      <v-card class="ma-3" max-width="344" outlined @click.stop="dialog = true">
-        <v-list-item>
-          <v-list-item-avatar>
-            <v-img src="https://mgsu.ru/kod/MGSUrui751.png"></v-img>
-          </v-list-item-avatar>
-
-          <v-list-item-content>
-            <v-list-item-title>Строительство парковки</v-list-item-title>
-            <v-list-item-subtitle></v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item three-line>
-          <v-list-item-content>
-            <v-list-item-subtitle
-              >Адрес: СВАО, Ярославское шоссе, вл. 26</v-list-item-subtitle
-            >
-            <v-list-item-subtitle>Застройщик: НИУ МГСУ</v-list-item-subtitle>
-            <v-list-item-subtitle>Ген.подрядчик: НИУ МГСУ</v-list-item-subtitle>
-            <v-list-item-subtitle
-              >Субъектов на объекте: 24 чел.</v-list-item-subtitle
-            >
-            <v-list-item-subtitle
-              >Иницидентов на объекте: 0 шт.</v-list-item-subtitle
-            >
-          </v-list-item-content>
-        </v-list-item>
-        <v-card-actions>
-          <v-btn outlined rounded text>
-            <v-icon>mdi-clipboard-list</v-icon> Журнал
-          </v-btn>
-          <v-btn outlined rounded text>
-            <v-icon>mdi-fountain-pen-tip</v-icon>Редактировать
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-      <v-card class="ma-3" max-width="344" outlined @click.stop="dialog = true">
-        <v-list-item>
-          <v-list-item-avatar>
-            <v-img src="https://mgsu.ru/kod/MGSUrui751.png"></v-img>
-          </v-list-item-avatar>
-
-          <v-list-item-content>
-            <v-list-item-title>Благоустройство пруда</v-list-item-title>
-            <v-list-item-subtitle></v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item three-line>
-          <v-list-item-content>
-            <v-list-item-subtitle
-              >Адрес: СВАО, Ярославское шоссе, вл. 26</v-list-item-subtitle
-            >
-            <v-list-item-subtitle>Застройщик: НИУ МГСУ</v-list-item-subtitle>
-            <v-list-item-subtitle>Ген.подрядчик: НИУ МГСУ</v-list-item-subtitle>
-            <v-list-item-subtitle
-              >Субъектов на объекте: 41 чел.</v-list-item-subtitle
-            >
-            <v-list-item-subtitle
-              >Иницидентов на объекте: 2 шт.</v-list-item-subtitle
-            >
+            <v-list-item-subtitle>
+              Адрес: {{ construction.address }}
+            </v-list-item-subtitle>
+            <v-list-item-subtitle>
+              Застройщик:{{ construction.developerName }}
+            </v-list-item-subtitle>
+            <v-list-item-subtitle>
+              Работников на объекте:
+              {{ construction.workers.length }} чел.
+            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-card-actions>
@@ -126,30 +62,28 @@
         </v-card-actions>
       </v-card>
     </div>
-    <v-dialog v-model="dialog">
+    <v-dialog v-model="dialogDetails">
       <v-card>
         <v-card-title class="headline">
-          Реконструкция территрии НИУ МГСУ
+          {{ openedConstruction.name }}
         </v-card-title>
         <v-row no-gutters>
           <v-col cols="12" sm="6">
             <v-card-text>
               <GmapMap
-                :center="center"
+                :center="openedConstruction.center"
                 :zoom="17"
                 map-type-id="satellite"
                 style="width: 100%; height: 500px"
               >
                 <GmapMarker
-                  v-for="m in markers"
-                  :position="m.position"
-                  :key="m.position.lat"
-                  :clickable="true"
-                  :draggable="true"
-                  @click="center = m.position"
+                  v-for="worker in openedConstruction.workers"
+                  v-if="worker.position"
+                  :position="worker.position.location"
+                  :key="worker.position.id"
                 ></GmapMarker>
                 <GmapPolygon
-                  :paths="paths"
+                  :paths="openedConstruction.polygon"
                   :editable="true"
                   :options="pathOptions"
                   @paths_changed="updateEdited($event)"
@@ -161,18 +95,16 @@
           <v-col cols="12" sm="6">
             <v-card-text>
               <v-list-item-subtitle
-                >Адрес: СВАО, Ярославское шоссе, вл. 26</v-list-item-subtitle
-              >
-              <v-list-item-subtitle>Застройщик: НИУ МГСУ</v-list-item-subtitle>
-              <v-list-item-subtitle
-                >Ген.подрядчик: НИУ МГСУ</v-list-item-subtitle
+                >Адрес: {{ openedConstruction.address }}</v-list-item-subtitle
               >
               <v-list-item-subtitle
-                >Субъектов на объекте: 41 чел.</v-list-item-subtitle
+                >Застройщик: {{ openedConstruction.developerName }} /
+                {{ openedConstruction.developerINN }}</v-list-item-subtitle
               >
-              <v-list-item-subtitle
-                >Иницидентов на объекте: 2 шт.</v-list-item-subtitle
-              >
+              <v-list-item-subtitle v-if="openedConstruction.workers">
+                Работников на объекте:
+                {{ openedConstruction.workers.length }} чел.
+              </v-list-item-subtitle>
             </v-card-text>
             <v-tabs
               v-model="tab"
@@ -188,9 +120,20 @@
             <v-tabs-items v-model="tab">
               <v-tab-item v-for="item in items" :key="item">
                 <v-card color="basil" flat v-if="tab == 0">
+                  <v-card-title>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      tile
+                      color="success"
+                      @click.stop="dialogAddWorker = true"
+                    >
+                      <v-icon left> mdi-account-multiple-plus </v-icon>
+                      Добавить работника
+                    </v-btn>
+                  </v-card-title>
                   <v-data-table
-                    :headers="dessertHeaders"
-                    :items="desserts"
+                    :headers="workersHeaders"
+                    :items="openedConstruction.workers"
                     :search="search"
                     item-key="name"
                     class="elevation-1"
@@ -215,12 +158,139 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="green darken-1" text @click="dialog = false">
-            Disagree
+          <v-btn color="green darken-1" text @click="dialogDetails = false">
+            Закрыть
           </v-btn>
-
-          <v-btn color="green darken-1" text @click="dialog = false">
-            Agree
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogAddWorker" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Профиль строителя</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  label="Фамилия Имя Отчество"
+                  required
+                  v-model="newWorker.fio"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  label="Email"
+                  required
+                  v-model="newWorker.email"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  label="Телефон"
+                  required
+                  v-model="newWorker.phone"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  label="Password*"
+                  type="password"
+                  v-model="newWorker.password"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                  label="Работодатель"
+                  required
+                  v-model="newWorker.employerName"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-autocomplete
+                  :items="[
+                    'Маляр-штукатур',
+                    'Каменщик',
+                    'Монтажник',
+                    'Сварщик',
+                    'Крановщик',
+                  ]"
+                  required
+                  v-model="newWorker.occupation"
+                  label="Специальность"
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialogAddWorker = false">
+            Отмена
+          </v-btn>
+          <v-btn color="blue darken-1" text @click="addNewWorker()">
+            Сохранить
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogAddObject" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Создать новый объект строительства</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  label="Название объекта"
+                  required
+                  v-model="newObject.name"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  label="Адрес"
+                  required
+                  v-model="newObject.address"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  label="Застройщик"
+                  required
+                  v-model="newObject.developerName"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <GmapMap
+                :center="{ lat: 55.753, lng: 37.616 }"
+                :zoom="15"
+                map-type-id="satellite"
+                style="width: 100%; height: 300px"
+              >
+                <GmapPolygon
+                  :paths="demoPath"
+                  :editable="true"
+                  :options="pathOptions"
+                  @paths_changed="updateNew($event)"
+                >
+                </GmapPolygon>
+              </GmapMap>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialogAddObject = false">
+            Отмена
+          </v-btn>
+          <v-btn color="blue darken-1" text @click="addNewObject()">
+            Сохранить
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -229,13 +299,143 @@
 </template>
 
 <script>
+const axios = require("axios");
+const qs = require("qs");
 export default {
+  created: function () {
+    axios
+      .get("https://apistroinav.dic.li/constructions")
+      .then((response) => (this.constructions = response.data));
+  },
+  methods: {
+    openDialog: function (construction) {
+      this.openedConstruction = construction;
+      axios
+        .get(
+          "https://apistroinav.dic.li/users?construction=" +
+            this.openedConstruction.id
+        )
+        .then((response) => (this.openedConstruction.workers = response.data));
+      this.dialogDetails = true;
+    },
+    updateNew(mvcArray) {
+      let paths = [];
+      for (let i = 0; i < mvcArray.getLength(); i++) {
+        let path = [];
+        for (let j = 0; j < mvcArray.getAt(i).getLength(); j++) {
+          let point = mvcArray.getAt(i).getAt(j);
+          path.push({ lat: point.lat(), lng: point.lng() });
+        }
+        paths.push(path);
+        console.log(paths);
+      }
+      this.editedPath = paths;
+    },
+    updateEdited(mvcArray) {
+      let paths = [];
+      for (let i = 0; i < mvcArray.getLength(); i++) {
+        let path = [];
+        for (let j = 0; j < mvcArray.getAt(i).getLength(); j++) {
+          let point = mvcArray.getAt(i).getAt(j);
+          path.push({ lat: point.lat(), lng: point.lng() });
+        }
+        paths.push(path);
+        console.log(paths);
+      }
+      this.editedPath = paths;
+      this.uploadNewPath(paths);
+    },
+    uploadNewPath(paths) {
+      var data = qs.stringify({ polygon: this.editedPath[0] });
+      var config = {
+        method: "put",
+        url: "https://apistroinav.dic.li/constructions/1",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        data: data,
+      };
+
+      axios(config)
+        .then(function (response) {
+          console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    addNewObject() {
+      var data = qs.stringify({
+        name: this.newObject.name,
+        address: this.newObject.address,
+        developerName: this.newObject.developerName,
+        center: { lat: 55.753, lng: 37.616 },
+        polygon: this.editedPath[0]
+      });
+      var config = {
+        method: "post",
+        url: "https://apistroinav.dic.li/constructions/",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        data: data,
+      };
+      var self = this
+      axios(config)
+        .then(function (response) {
+          self.dialogAddWorker = false
+          self.dialogDetails = false
+          self.dialogAddObject = false
+          console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    addNewWorker() {
+      var data = qs.stringify({
+        fio: this.newWorker.fio,
+        username: this.newWorker.fio,
+        email: this.newWorker.email,
+        password: this.newWorker.password,
+        employerName: this.newWorker.employerName,
+        phone: this.newWorker.phone,
+        occupation: this.newWorker.occupation,
+        construction: this.openedConstruction.id,
+        confirmed: true,
+      });
+      var config = {
+        method: "post",
+        url: "https://apistroinav.dic.li/users/",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        data: data,
+      };
+      var self = this
+      axios(config)
+        .then(function (response) {
+          self.dialogAddWorker = false
+          self.dialogDetails = false
+          console.log(JSON.stringify(response.data));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+  },
   data() {
     return {
-      dessertHeaders: [
-        { text: "ФИО", align: "start", value: "name" },
+      newWorker: {},
+      newObject: {},
+      editedPath: null,
+      constructions: [],
+      openedConstruction: {},
+      search: null,
+      workersHeaders: [
+        { text: "ФИО", align: "start", value: "fio" },
         { text: "Специальность", align: "start", value: "occupation" },
-        { text: "Работодатель", align: "start", value: "company" },
+        { text: "Работодатель", align: "start", value: "employerName" },
         { text: "Телефон", value: "phone" },
       ],
       desserts: [
@@ -245,135 +445,27 @@ export default {
           company: 'ООО "МСУ-1"',
           phone: "+79998887766",
         },
-        {
-          name: "Иванов Иван Иванович",
-          occupation: "Штукатурщик",
-          company: 'ООО "МСУ-1"',
-          phone: "+79998887766",
-        },
-        {
-          name: "Семенов Семен Семенович",
-          occupation: "Каменщик",
-          company: 'ООО "Строймонтаж"',
-          phone: "+79998887766",
-        },
-        {
-          name: "Кузьмин Кузьма Кузьмич",
-          occupation: "Каменщик",
-          company: 'ООО "Стройсервис"',
-          phone: "+79998887766",
-        },
-        {
-          name: "Никитин Никита Никитич",
-          occupation: "Сварщик",
-          company: 'ООО "Строймонтаж"',
-          phone: "+79998887766",
-        },
-        {
-          name: "Дмитриев Дмитрий Дмитревич",
-          occupation: "Монтажник",
-          company: 'ООО "МСУ-1"',
-          phone: "+79998887766",
-        },
       ],
       accidentsHeaders: [
-        { text: "ФИО", align: "start", value: "name" },
+        { text: "ФИО", align: "start", value: "fio" },
         { text: "Специальность", align: "start", value: "occupation" },
-        { text: "Работодатель", align: "start", value: "company" },
+        { text: "Работодатель", align: "start", value: "employerName" },
         { text: "Телефон", value: "phone" },
       ],
       accidents: [
-        {
-          name: "Петров Петр Петрович",
-          occupation: "Маляр",
-          company: 'ООО "Рога и копыта"',
-          phone: "+79998887766",
-        },
-        {
-          name: "Иванов Иван Иванович",
-          occupation: "Штукатурщик",
-          company: 'ООО "Рога и копыта"',
-          phone: "+79998887766",
-        },
-        {
-          name: "Семенов Семен Семенович",
-          occupation: "Каменщик",
-          company: 'ООО "Копыта и рога"',
-          phone: "+79998887766",
-        },
-        {
-          name: "Кузьмин Кузьма Кузьмич",
-          occupation: "Каменщик",
-          company: 'ООО "Копыта и рога"',
-          phone: "+79998887766",
-        },
-        {
-          name: "Никитин Никита Никитич",
-          occupation: "Сварщик",
-          company: 'ООО "Рога и копыта"',
-          phone: "+79998887766",
-        },
-        {
-          name: "Дмитриев Дмитрий Дмитревич",
-          occupation: "Монтажник",
-          company: 'ООО "Рога и копыта"',
-          phone: "+79998887766",
-        },
+        // TODO: Получение списка инцидентов на площадке
       ],
       tab: null,
       items: ["Список субъектов", "Журнал инцидентов"],
-      text:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      dialog: false,
-      center: {
-        lat: 55.857726,
-        lng: 37.691607,
-      },
-      markers: [
-        {
-          position: {
-            lat: 55.857971,
-            lng: 37.689412,
-          },
-        },
-        {
-          position: {
-            lat: 55.858579,
-            lng: 37.689779,
-          },
-        },
-        {
-          position: {
-            lat: 55.858925,
-            lng: 37.690584,
-          },
-        },
-        {
-          position: {
-            lat: 55.858708,
-            lng: 37.69207,
-          },
-        },
-      ],
-      paths: [
+      dialogDetails: false,
+      dialogAddWorker: false,
+      dialogAddObject: false,
+      demoPath: [
         [
-          { lat: 55.857058, lng: 37.688616 },
-          { lat: 55.857318, lng: 37.68868 },
-          { lat: 55.857676, lng: 37.689699 },
-          { lat: 55.85798, lng: 37.690407 },
-          { lat: 55.857584, lng: 37.691099 },
-          { lat: 55.858606, lng: 37.693129 },
-          { lat: 55.858869, lng: 37.692708 },
-          { lat: 55.859065, lng: 37.692437 },
-          { lat: 55.858964, lng: 37.692249 },
-          { lat: 55.859647, lng: 37.691179 },
-          { lat: 55.85778, lng: 37.687443 },
-        ],
-        [
-          { lat: 1.382, lng: 103.802 },
-          { lat: 1.382, lng: 103.808 },
-          { lat: 1.388, lng: 103.808 },
-          { lat: 1.388, lng: 103.802 },
+          { lat: 55.755, lng: 37.614 },
+          { lat: 55.755, lng: 37.618 },
+          { lat: 55.751, lng:  37.618 },
+          { lat: 55.751, lng: 37.614 },
         ],
       ],
       pathOptions: {

@@ -1,14 +1,5 @@
 <template>
   <v-app id="inspire">
-    <v-system-bar app>
-      <v-spacer></v-spacer>
-
-      <v-icon>mdi-square</v-icon>
-
-      <v-icon>mdi-circle</v-icon>
-
-      <v-icon>mdi-triangle</v-icon>
-    </v-system-bar>
 
     <v-navigation-drawer v-model="drawer" app>
       <v-sheet color="grey lighten-4" class="pa-4">
@@ -17,10 +8,10 @@
             <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
           </v-list-item-avatar>
 
-          <v-list-item-title>John Leider</v-list-item-title>
+          <v-list-item-title>Demo User</v-list-item-title>
         </v-list-item>
 
-        <div>john@vuetifyjs.com</div>
+        <div>demo@user.com</div>
       </v-sheet>
 
       <v-divider></v-divider>
@@ -58,9 +49,9 @@ export default {
     drawer: null,
     links: [
       ["mdi-city-variant", "Объекты строительства", "objects"],
-      ["mdi-account-supervisor", "Субъекты", "subjects"],
+      /*["mdi-account-supervisor", "Субъекты", "subjects"],
       ["mdi-clipboard-list-outline", "Журнал событий", "journal"],
-      ["mdi-cog", "Настройки", "settings"],
+      ["mdi-cog", "Настройки", "settings"],*/
     ],
   }),
 };
