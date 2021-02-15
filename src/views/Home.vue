@@ -5,7 +5,7 @@
           <v-layout flex align-center justify-center>
             <v-flex xs12 sm4 elevation-6>
               <v-toolbar class="pt-5 blue darken-4">
-                <v-toolbar-title class="white--text"><h4>Стройнавигатор</h4></v-toolbar-title>
+                <v-toolbar-title class="white--text"><h4>Турфон</h4></v-toolbar-title>
                 </v-toolbar-items>
               </v-toolbar>
               <v-card>

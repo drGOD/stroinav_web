@@ -30,7 +30,30 @@
             <v-list-item-title>{{ text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-list-item-title>Доступный баланс</v-list-item-title>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>500</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-icon>
+            <v-list-item-title>Кредитный лимит</v-list-item-title>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>50</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
+      <div class="px-3">
+        <v-btn block color="blue" dark elevation="2">
+          Пополнить баланс
+        </v-btn>
+      </div>
     </v-navigation-drawer>
 
     <v-main>
@@ -68,13 +91,9 @@
                     :key="construction.id"
                   >
                     <v-list-item>
-                      <v-list-item-avatar>
-                        <v-img src="https://mgsu.ru/kod/MGSUrui751.png"></v-img>
-                      </v-list-item-avatar>
-
                       <v-list-item-content>
                         <v-list-item-title>{{
-                          construction.name
+                          construction.Name
                         }}</v-list-item-title>
                         <v-list-item-subtitle></v-list-item-subtitle>
                       </v-list-item-content>
@@ -82,14 +101,14 @@
                     <v-list-item three-line>
                       <v-list-item-content>
                         <v-list-item-subtitle>
-                          Адрес: {{ construction.address }}
+                          Дата: {{ construction.Start }}
                         </v-list-item-subtitle>
                         <v-list-item-subtitle>
-                          Застройщик:{{ construction.developerName }}
+                          Гид: {{ construction.guide.username }}
                         </v-list-item-subtitle>
                         <v-list-item-subtitle>
-                          Работников на объекте:
-                          {{ construction.workers.length }} чел.
+                          Подключений:
+                          {{ construction.ListenersPlaned }} чел.
                         </v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
@@ -383,7 +402,7 @@ const qs = require("qs");
 export default {
   created: function () {
     axios
-      .get("https://apistroinav.dic.li/constructions")
+      .get("http://185.5.54.22:1077/excursions")
       .then((response) => (this.constructions = response.data));
   },
   methods: {
